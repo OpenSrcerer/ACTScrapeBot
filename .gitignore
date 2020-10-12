@@ -1,1 +1,11 @@
 /src/main/resources/
+/.idea/.gitignore
+/.idea/compiler.xml
+/.idea/discord.xml
+/.idea/encodings.xml
+/Hackathon.iml
+/.idea/jarRepositories.xml
+/.idea/misc.xml
+/pom.xml
+/.idea/uiDesigner.xml
+/.idea/vcs.xml
