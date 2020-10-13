@@ -1,13 +1,26 @@
 package actScrapeBot.entities;
 
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+
+import java.io.IOException;
 import java.util.concurrent.Semaphore;
 
+/**
+ * Manages a WebClient instance, making sure
+ * that all operations are atomic.
+ */
 public class WebClient implements Mutex {
 
-    private static final Semaphore mutex = new Semaphore(1);
-    private static com.gargoylesoftware.htmlunit.WebClient client;
+    private final Semaphore mutex = new Semaphore(1);
+    private final com.gargoylesoftware.htmlunit.WebClient client;
 
+    public WebClient() {
+        client = new com.gargoylesoftware.htmlunit.WebClient();
+    }
 
+    public HtmlPage getPage(String pageName) throws IOException {
+        return client.getPage(pageName);
+    }
 
     @Override
     public void acquireMutex() throws InterruptedException {
