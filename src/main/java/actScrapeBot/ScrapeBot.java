@@ -1,6 +1,7 @@
 package actScrapeBot;
 
 import actScrapeBot.callables.InitToken;
+import actScrapeBot.entities.WebClient;
 import actScrapeBot.listeners.Ready;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -31,15 +32,17 @@ public class ScrapeBot {
      * @see Ready
      */
     public static void execute() {
-        String[] token = new InitToken().call();
+        String token = new InitToken().call();
 
-        if (token[0].isEmpty()) {
+        if (token == null) {
             logger.warn("Token was not initiaized. Canceling start-up operation.");
         }
 
+        new WebClient();
+
         try {
             ScrapeBot = JDABuilder
-                    .create(token[0], intents)
+                    .create(token, intents)
                     .disableCache(
                             CacheFlag.ACTIVITY,
                             CacheFlag.EMOTE,

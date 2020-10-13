@@ -18,17 +18,17 @@ import actScrapeBot.ScrapeBot;
 /**
  * Initializes token variables for loading.
  */
-public class InitToken implements Callable<String[]> {
+public class InitToken implements Callable<String> {
 
-    private static final Logger lgr = LoggerFactory.getLogger(InitToken.class);
+    private static final Logger logger = LoggerFactory.getLogger(InitToken.class);
 
     public InitToken() {
         this.call();
     }
 
     @Override
-    public String[] call() {
-        String[] token = new String[1];
+    public String call() {
+        String token = null;
 
         try {
             // Initialize configuration file found in resources.
@@ -36,8 +36,8 @@ public class InitToken implements Callable<String[]> {
             InputStream configFile = ScrapeBot.class.getClassLoader().getResourceAsStream("config.json");
 
             if (configFile == null) {
-                lgr.error("JSON config file not found.");
-                return token;
+                logger.error("JSON config file not found.");
+                return null;
             }
 
             JSONParser parser = new JSONParser();
@@ -46,14 +46,14 @@ public class InitToken implements Callable<String[]> {
                     )
             );
 
-            token[0] = jsonObject.get("Token").toString();
+            token = jsonObject.get("Token").toString();
 
         } catch (FileNotFoundException ex) {
-            lgr.error("JSON config file not found.");
+            logger.error("JSON config file not found.");
         } catch (ParseException ex) {
-            lgr.error("Parsing error!", ex);
+            logger.error("Parsing error!", ex);
         } catch (IOException ex) {
-            lgr.error("I/O Error while parsing JSON file.", ex);
+            logger.error("I/O Error while parsing JSON file.", ex);
         }
 
         return token;
