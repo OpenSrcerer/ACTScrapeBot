@@ -1,4 +1,4 @@
-package actScrapeBot.entities;
+package actScrapeBot.managers;
 
 public interface Mutex {
     void acquireMutex() throws InterruptedException;

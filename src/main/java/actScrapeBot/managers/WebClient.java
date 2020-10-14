@@ -1,4 +1,4 @@
-package actScrapeBot.entities;
+package actScrapeBot.managers;
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
