@@ -31,6 +31,6 @@ public class UserManager {
                 return user;
             }
         }
-        return new ActUser(discordId);
+        return new ActUser();
     }
 }
