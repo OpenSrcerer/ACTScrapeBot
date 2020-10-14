@@ -6,15 +6,18 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Manages and holds information for a course.
+ */
 public class Course {
 
     private final String courseName, courseLecturer, courseTerm;
     // The variable below holds the information
     // within the course. Anything
     // posted by the lecturer goes here.
-    private final Map<String, List<String>> resources;
+    private final Map<String, List<Resource>> resources;
 
-    public Course(String cName, String cLecturer, String cTerm, Map<String, List<String>> res) throws IllegalArgumentException {
+    public Course(String cName, String cLecturer, String cTerm, Map<String, List<Resource>> res) throws IllegalArgumentException {
         if (cName == null) {
             throw new IllegalArgumentException("Provided Course Name was null!");
         } else if (cLecturer == null) {
@@ -31,13 +34,20 @@ public class Course {
         resources = res;
     }
 
+    public Course(Course course)  {
+        courseName = course.getCourseName();
+        courseLecturer = course.getCourseLecturer();
+        courseTerm = course.getCourseTerm();
+        resources = course.getResources();
+    }
+
     @Nullable
-    public List<String> getResources(String key) {
+    public List<Resource> getResources(String key) {
         return resources.get(key);
     }
 
     @Nonnull
-    public Map<String, List<String>> getResources() {
+    public Map<String, List<Resource>> getResources() {
         return resources;
     }
 
