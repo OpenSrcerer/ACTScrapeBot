@@ -4,6 +4,10 @@ import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.time.Instant;
 
+/**
+ * Contains all the possible return value templates
+ * to be shown to the Discord user.
+ */
 public class ReturnEmbeds {
 
     public static EmbedBuilder returnLoginSuccessful(String actUser) {

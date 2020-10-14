@@ -4,6 +4,10 @@ import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.time.Instant;
 
+/**
+ * Contains all possible error templates to be shown
+ * to the Discord user.
+ */
 public class ErrorEmbeds {
     public static EmbedBuilder errorLogin() {
         EmbedBuilder eb = new EmbedBuilder();
