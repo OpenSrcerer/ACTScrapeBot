@@ -1,6 +1,8 @@
 package actScrapeBot.listeners;
 
 import actScrapeBot.ScrapeBot;
+import actScrapeBot.commands.getCourses.GetCourses;
+import actScrapeBot.commands.getResources.GetResources;
 import actScrapeBot.commands.login.Login;
 import actScrapeBot.commands.logout.Logout;
 import net.dv8tion.jda.api.entities.Message;
@@ -26,14 +28,30 @@ public class CommandTrigger extends ListenerAdapter {
 
         ArrayList<String> args = getArguments(event.getMessage());
 
-        if (args.get(0).equalsIgnoreCase("<@" + ScrapeBot.ScrapeBot.getSelfUser().getId() + "> login")) {
-            args.subList(0, 1).clear();
+        if (args.size() < 2) { return; }
+
+        if (args.get(0).equalsIgnoreCase("<@!" + ScrapeBot.ScrapeBot.getSelfUser().getId() + ">")
+                && args.get(1).equalsIgnoreCase("login")) {
+            args.subList(0, 2).clear();
             new Login(event.getAuthor(), event.getChannel(), args);
         }
 
-        if (args.get(0).equalsIgnoreCase("<@" + ScrapeBot.ScrapeBot.getSelfUser().getId() + "> logout")) {
-            args.subList(0, 1).clear();
+        else if (args.get(0).equalsIgnoreCase("<@!" + ScrapeBot.ScrapeBot.getSelfUser().getId() + ">")
+                && args.get(1).equalsIgnoreCase("logout")) {
+            args.subList(0, 2).clear();
             new Logout(event.getAuthor(), event.getChannel());
+        }
+
+        else if (args.get(0).equalsIgnoreCase("<@!" + ScrapeBot.ScrapeBot.getSelfUser().getId() + ">")
+                && args.get(1).equalsIgnoreCase("getcourses")) {
+            args.subList(0, 2).clear();
+            new GetCourses(event.getAuthor(), event.getChannel(), args);
+        }
+
+        else if (args.get(0).equalsIgnoreCase("<@!" + ScrapeBot.ScrapeBot.getSelfUser().getId() + ">")
+                && args.get(1).equalsIgnoreCase("getresources")) {
+            args.subList(0, 2).clear();
+            new GetResources(event.getAuthor(), event.getChannel(), args);
         }
     }
 
@@ -44,14 +62,30 @@ public class CommandTrigger extends ListenerAdapter {
 
         ArrayList<String> args = getArguments(event.getMessage());
 
-        if (args.get(0).equalsIgnoreCase("<@" + ScrapeBot.ScrapeBot.getSelfUser().getId() + "> login")) {
-            args.subList(0, 1).clear();
+        if (args.size() < 2) { return; }
+
+        if (args.get(0).equalsIgnoreCase("<@!" + ScrapeBot.ScrapeBot.getSelfUser().getId() + ">")
+                && args.get(1).equalsIgnoreCase("login")) {
+            args.subList(0, 2).clear();
             new Login(event.getAuthor(), event.getChannel(), args);
         }
 
-        if (args.get(0).equalsIgnoreCase("<@" + ScrapeBot.ScrapeBot.getSelfUser().getId() + "> logout")) {
-            args.subList(0, 1).clear();
+        else if (args.get(0).equalsIgnoreCase("<@!" + ScrapeBot.ScrapeBot.getSelfUser().getId() + ">")
+                && args.get(1).equalsIgnoreCase("logout")) {
+            args.subList(0, 2).clear();
             new Logout(event.getAuthor(), event.getChannel());
+        }
+
+        else if (args.get(0).equalsIgnoreCase("<@!" + ScrapeBot.ScrapeBot.getSelfUser().getId() + ">")
+                && args.get(1).equalsIgnoreCase("getcourses")) {
+            args.subList(0, 2).clear();
+            new GetCourses(event.getAuthor(), event.getChannel(), args);
+        }
+
+        else if (args.get(0).equalsIgnoreCase("<@!" + ScrapeBot.ScrapeBot.getSelfUser().getId() + ">")
+                && args.get(1).equalsIgnoreCase("getresources")) {
+            args.subList(0, 2).clear();
+            new GetResources(event.getAuthor(), event.getChannel(), args);
         }
     }
 
