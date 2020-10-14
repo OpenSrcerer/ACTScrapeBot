@@ -1,7 +1,7 @@
 package actScrapeBot;
 
 import actScrapeBot.callables.InitToken;
-import actScrapeBot.entities.WebClient;
+import actScrapeBot.managers.WebClient;
 import actScrapeBot.listeners.Ready;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -23,7 +23,8 @@ public class ScrapeBot {
 
     private static final EnumSet<GatewayIntent> intents = EnumSet.of(
             GatewayIntent.GUILD_MESSAGES,
-            GatewayIntent.GUILD_MESSAGE_REACTIONS
+            GatewayIntent.GUILD_MESSAGE_REACTIONS,
+            GatewayIntent.DIRECT_MESSAGES
     );
 
     /**
