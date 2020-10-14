@@ -1,18 +1,21 @@
 package actScrapeBot.commands.login;
 
 import actScrapeBot.ScrapeBot;
+import actScrapeBot.callables.LoginCallable;
 import actScrapeBot.commands.Command;
 import actScrapeBot.entities.ActUser;
 import actScrapeBot.managers.UserManager;
-import actScrapeBot.preparedStatements.ErrorEmbeds;
 import actScrapeBot.preparedStatements.HelpEmbeds;
+import actScrapeBot.requests.LoginRequest;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.PrivateChannel;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 
 import java.util.List;
 
+/**
+ * Initiates a login request.
+ */
 public class Login implements Command {
 
     private final User eventUser;
@@ -20,7 +23,7 @@ public class Login implements Command {
     private final List<String> args;
 
     /**
-     * Initiates a Login event. Notice the logic in the constructor.
+     * Initiates a Login request. Notice the logic in the constructor.
      * If the command was executed from the server, the bot responds
      * through a private channel to keep login details private.
      * If the private channel does not exist, it creates a new one.
@@ -32,23 +35,23 @@ public class Login implements Command {
         eventUser = eu;
         args = ar;
 
-        if (pc instanceof TextChannel) {
+        if (!(pc instanceof PrivateChannel)) {
             PrivateChannel tempChannel = ScrapeBot.ScrapeBot.getPrivateChannelById(eu.getId());
 
             if (tempChannel == null) {
                 ScrapeBot.ScrapeBot.openPrivateChannelById(eu.getId())
-                        .map(this::setPrivateChannel)
+                        .map(this::execWithNewPrivChannel)
                         .queue();
             }
         } else {
             eventChannel = (PrivateChannel) pc;
+            execute();
         }
-
-        execute();
     }
 
-    private PrivateChannel setPrivateChannel(PrivateChannel pc) {
+    private PrivateChannel execWithNewPrivChannel(PrivateChannel pc) {
         eventChannel = pc;
+        execute();
         return pc;
     }
 
@@ -61,20 +64,13 @@ public class Login implements Command {
 
         ActUser user = UserManager.getInstance().getLoggedInUser(eventUser.getId());
 
-        if (user.getActUsername() != null) {
+        if (!user.getActUsername().equals("")) {
             eventChannel.sendMessage(HelpEmbeds.helpAlreadyLoggedIn(user.getActUsername()).build()).queue();
             return;
         }
 
         String username = args.get(0), password = args.get(1);
 
-        // log in using webclient
-
-        if (login successful) {
-            UserManager.getInstance().addLoggedInUser(user);
-            eventChannel.sendMessage(HelpEmbeds.helpAlreadyLoggedIn(user.getActUsername()).build()).queue();
-        } else {
-            eventChannel.sendMessage(ErrorEmbeds.errorLogin().build()).queue();
-        }
+        new LoginRequest(new LoginCallable(eventChannel, eventUser.getId(), username, password));
     }
 }

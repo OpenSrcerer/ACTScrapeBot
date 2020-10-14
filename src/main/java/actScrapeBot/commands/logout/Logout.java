@@ -1,24 +1,26 @@
 package actScrapeBot.commands.logout;
 
 import actScrapeBot.ScrapeBot;
+import actScrapeBot.callables.LogoutCallable;
 import actScrapeBot.commands.Command;
 import actScrapeBot.entities.ActUser;
 import actScrapeBot.managers.UserManager;
 import actScrapeBot.preparedStatements.HelpEmbeds;
-import actScrapeBot.preparedStatements.ReturnEmbeds;
+import actScrapeBot.requests.LogoutRequest;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.PrivateChannel;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 
-
+/**
+ * Initiates a logout request.
+ */
 public class Logout implements Command {
 
     private final User eventUser;
     private PrivateChannel eventChannel;
 
     /**
-     * Initiates a Logout event. Notice the logic in the constructor.
+     * Initiates a Logout request. Notice the logic in the constructor.
      * If the command was executed from the server, the bot responds
      * through a private channel to keep login details private.
      * If the private channel does not exist, it creates a new one.
@@ -28,23 +30,23 @@ public class Logout implements Command {
     public Logout(User eu, MessageChannel pc) {
         eventUser = eu;
 
-        if (pc instanceof TextChannel) {
+        if (!(pc instanceof PrivateChannel)) {
             PrivateChannel tempChannel = ScrapeBot.ScrapeBot.getPrivateChannelById(eu.getId());
 
             if (tempChannel == null) {
                 ScrapeBot.ScrapeBot.openPrivateChannelById(eu.getId())
-                        .map(this::setPrivateChannel)
+                        .map(this::execWithNewPrivChannel)
                         .queue();
             }
         } else {
             eventChannel = (PrivateChannel) pc;
+            execute();
         }
-
-        execute();
     }
 
-    private PrivateChannel setPrivateChannel(PrivateChannel pc) {
+    private PrivateChannel execWithNewPrivChannel(PrivateChannel pc) {
         eventChannel = pc;
+        execute();
         return pc;
     }
 
@@ -52,12 +54,11 @@ public class Logout implements Command {
     public void execute() {
         ActUser user = UserManager.getInstance().getLoggedInUser(eventUser.getId());
 
-        if (user.getActUsername() == null) {
+        if (user.getActUsername().equals("")) {
             eventChannel.sendMessage(HelpEmbeds.helpNotLoggedIn().build()).queue();
             return;
         }
 
-        UserManager.getInstance().removeLoggedInUser(user);
-        eventChannel.sendMessage(ReturnEmbeds.returnLogoutSuccessful(user.getActUsername()).build()).queue();
+        new LogoutRequest(new LogoutCallable(eventChannel, user));
     }
 }
