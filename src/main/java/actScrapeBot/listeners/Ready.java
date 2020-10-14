@@ -6,6 +6,8 @@ import actScrapeBot.commands.getResources.ResourcesReceiver;
 import actScrapeBot.commands.login.LoginReceiver;
 import actScrapeBot.commands.logout.LogoutReceiver;
 import actScrapeBot.managers.RequestManager;
+import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -23,5 +25,7 @@ public class Ready extends ListenerAdapter {
                 new ResourcesReceiver(),
                 new CoursesReceiver()
         );
+
+        ScrapeBot.ScrapeBot.getPresence().setPresence(OnlineStatus.ONLINE, Activity.watching("activity.act.edu"));
     }
 }
