@@ -1,16 +1,18 @@
 package actScrapeBot.requests;
 
-import actScrapeBot.entities.ActUser;
+import actScrapeBot.callables.RequestCallable;
 
-import java.util.concurrent.ScheduledFuture;
-
+/**
+ * This interface's purpose is managing
+ * different types of Requests that need to
+ * be processed, in an easier fashion.
+ */
 public interface Request {
-
-    ActUser getRequestUser();
-
-    void setLifetime(ScheduledFuture<?> lifetime);
-
-    void cancelDestruction();
-
     void queue();
+
+    void run();
+
+    Object getValue();
+
+    RequestCallable getCallable();
 }

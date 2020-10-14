@@ -1,37 +1,49 @@
 package actScrapeBot.requests;
 
+import actScrapeBot.callables.LoginCallable;
+import actScrapeBot.callables.RequestCallable;
 import actScrapeBot.entities.ActUser;
 import actScrapeBot.managers.RequestManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.ScheduledFuture;
-
+/**
+ * Request that contains necessary details for
+ * users to be logged in.
+ */
 public class LoginRequest implements Request {
 
-    private final ActUser requestUser;
-    private ScheduledFuture<?> lifetime;
+    private final LoginCallable callable;
+    private static final Logger lgr = LoggerFactory.getLogger(LoginRequest.class);
 
-    public LoginRequest(ActUser rUser) {
-        requestUser = rUser;
+    private ActUser user = new ActUser();
+
+    public LoginRequest(LoginCallable cllbl) {
+        callable = cllbl;
         queue();
     }
 
     @Override
-    public ActUser getRequestUser() {
-        return requestUser;
-    }
-
-    @Override
-    public void setLifetime(ScheduledFuture<?> lt) {
-        lifetime = lt;
-    }
-
-    @Override
-    public void cancelDestruction() {
-        lifetime.cancel(false);
-    }
-
-    @Override
     public void queue() {
+        try {
         RequestManager.getInstance().queueRequest(this);
+        } catch (InterruptedException ex) {
+            lgr.warn("Thread interrupted while queuing request!");
+        }
+    }
+
+    @Override
+    public void run() {
+        user = callable.call();
+    }
+
+    @Override
+    public ActUser getValue() {
+        return user;
+    }
+
+    @Override
+    public RequestCallable getCallable() {
+        return callable;
     }
 }

@@ -1,38 +1,50 @@
 package actScrapeBot.requests;
 
-import actScrapeBot.entities.ActUser;
+import actScrapeBot.callables.CoursesCallable;
+import actScrapeBot.callables.RequestCallable;
+import actScrapeBot.entities.Course;
 import actScrapeBot.managers.RequestManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.ScheduledFuture;
+import java.util.List;
 
+/**
+ * Request that contains necessary details for
+ * Courses to be retrieved.
+ */
 public class CoursesRequest implements Request {
+    private final CoursesCallable callable;
+    private static final Logger lgr = LoggerFactory.getLogger(CoursesRequest.class);
 
-    private final ActUser requestUser;
-    private ScheduledFuture<?> lifetime;
+    private List<Course> courseList = null;
 
-    public CoursesRequest(ActUser rUser) {
-        requestUser = rUser;
+    public CoursesRequest(CoursesCallable cllbl) {
+        callable = cllbl;
         queue();
     }
 
     @Override
-    public ActUser getRequestUser() {
-        return requestUser;
-    }
-
-    @Override
-    public void setLifetime(ScheduledFuture<?> lt) {
-        lifetime = lt;
-    }
-
-    @Override
-    public void cancelDestruction() {
-        lifetime.cancel(false);
-    }
-
-    @Override
     public void queue() {
+        try {
         RequestManager.getInstance().queueRequest(this);
+        } catch (InterruptedException ex) {
+            lgr.warn("Thread interrupted while queuing request!");
+        }
     }
 
+    @Override
+    public void run() {
+        courseList = callable.call();
+    }
+
+    @Override
+    public List<Course> getValue() {
+        return courseList;
+    }
+
+    @Override
+    public RequestCallable getCallable() {
+        return callable;
+    }
 }

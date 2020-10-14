@@ -1,37 +1,53 @@
 package actScrapeBot.requests;
 
-import actScrapeBot.entities.ActUser;
+import actScrapeBot.callables.RequestCallable;
+import actScrapeBot.callables.ResourcesCallable;
+import actScrapeBot.entities.Resource;
 import actScrapeBot.managers.RequestManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.ScheduledFuture;
+import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * Request that contains necessary details for
+ * resources to be retrieved.
+ */
 public class ResourcesRequest implements Request {
 
-    private final ActUser requestUser;
-    private ScheduledFuture<?> lifetime;
+    private static final Logger lgr = LoggerFactory.getLogger(ResourcesRequest.class);
+    private final ResourcesCallable callable;
 
-    public ResourcesRequest(ActUser rUser) {
-        requestUser = rUser;
+    // Return Item
+    private List<Resource> resourceList = new ArrayList<>();
+
+    public ResourcesRequest(ResourcesCallable cllbl) {
+        callable = cllbl;
         queue();
     }
 
     @Override
-    public ActUser getRequestUser() {
-        return requestUser;
-    }
-
-    @Override
-    public void setLifetime(ScheduledFuture<?> lt) {
-        lifetime = lt;
-    }
-
-    @Override
-    public void cancelDestruction() {
-        lifetime.cancel(false);
-    }
-
-    @Override
     public void queue() {
-        RequestManager.getInstance().queueRequest(this);
+        try {
+            RequestManager.getInstance().queueRequest(this);
+        } catch (InterruptedException ex) {
+            lgr.warn("Thread interrupted while queuing request!");
+        }
+    }
+
+    @Override
+    public void run() {
+        resourceList = callable.call();
+    }
+
+    @Override
+    public List<Resource> getValue() {
+        return resourceList;
+    }
+
+    @Override
+    public RequestCallable getCallable() {
+        return callable;
     }
 }
