@@ -25,7 +25,8 @@ public class CoursesCallable implements RequestCallable, Callable<List<Course>> 
     @Override
     public List<Course> call() {
         // get course, and its' resources
-        return course;
+        //return course;
+        return null;
     }
 
     @Override
