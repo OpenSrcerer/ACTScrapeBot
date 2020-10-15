@@ -1,3 +1,4 @@
 language: java
 os: linux
 dist: xenial
+script: mvn compile -B
