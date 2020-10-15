@@ -52,7 +52,7 @@
   <h2 align=center>
     Please credit me if you're going to use my code!<br><br>
     Credits for the icons used:<br>
-    kiddo, Gregor Cresnar, Nadir Balcikli, Adrien Coquet, Imam Januar, ImageCatalog, Hea Poh Lin
+    kiddo, Gregor Cresnar, Nadir Balcikli, Adrien Coquet, Imam Januar, ImageCatalog, Hea Poh Lin<br>
     The Noun Project https://thenounproject.com/
   </h2>
 </h1>
